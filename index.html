@@ -33,37 +33,18 @@
       transform: scale(1.05);
     }
 
-    h1 {
-      font-size: 1.8rem;
-      margin: 0 0 1rem 0;
-    }
-
-    p {
-      font-size: 1.2rem;
-      min-height: 3em;
-      margin: 1rem 0;
-      padding: 0 1rem;
-      line-height: 1.4;
-    }
+    h1 { font-size: 1.8rem; margin: 0 0 1rem 0; }
+    p { font-size: 1.2rem; min-height: 3em; margin: 1rem 0; padding: 0 1rem; line-height: 1.4; }
 
     button {
-      background: #ffcc70;
-      border: none;
-      padding: 0.7rem 1.5rem;
-      border-radius: 999px;
-      font-size: 1rem;
-      cursor: pointer;
+      background: #ffcc70; border: none; padding: 0.7rem 1.5rem;
+      border-radius: 999px; font-size: 1rem; cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    button:hover {
-      background: #ffdb99;
-    }
+    button:hover { background: #ffdb99; }
 
-    .loading {
-      animation: pulse 1s infinite;
-      color: #d9a066;
-    }
+    .loading { animation: pulse 1s infinite; color: #d9a066; }
 
     @keyframes pulse {
       0% { transform: scale(1); opacity: 0.6; }
@@ -91,10 +72,8 @@
     try {
       const response = await fetch(WORKER_URL, { cache: "no-store" });
       const data = await response.json();
-
       spruchElem.textContent = data.spruch;
       document.body.style.background = data.bgColor;
-
     } catch (error) {
       spruchElem.textContent = "Ups! Fehler beim Laden.";
       console.error(error);
@@ -103,7 +82,7 @@
     }
   }
 
-  // Direkt beim Laden einen Spruch anzeigen
+  // Beim Laden direkt einen Spruch anzeigen
   neuerSpruch();
 </script>
 
