@@ -5,56 +5,15 @@
 <title>🍪 KI-Glückskeks</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(135deg, #fff8e7, #ffeac0);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    text-align: center;
-    transition: background 0.5s ease;
-  }
-
-  .card {
-    background: #fff7e6;
-    padding: 2.5rem;
-    border-radius: 50%;
-    width: 320px;
-    height: 320px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    text-align: center;
-    transition: transform 0.3s ease;
-  }
-
+  body { font-family: 'Segoe UI', sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; text-align:center; transition: background 0.5s ease; }
+  .card { background:#fff7e6; padding:2.5rem; border-radius:50%; width:320px; height:320px; display:flex; flex-direction:column; justify-content:center; align-items:center; box-shadow:0 15px 35px rgba(0,0,0,0.15); text-align:center; transition: transform 0.3s ease; }
   .card:hover { transform: scale(1.05); }
-
-  h1 { font-size: 2rem; margin-bottom: 1rem; color: #d18b3f; }
-  p { font-size: 1.2rem; line-height: 1.5; color: #6b4c2f; min-height: 3em; padding: 0 1rem; transition: opacity 0.3s ease; }
-
-  button {
-    margin-top: 1.5rem;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 999px;
-    font-size: 1rem;
-    cursor: pointer;
-    background: #f7c873;
-    color: #6b4c2f;
-    font-weight: bold;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
-  }
-
-  button:hover { background: #ffd68a; transform: translateY(-2px); }
-
-  .fade { opacity: 0; transition: opacity 0.4s ease; }
-  .fade.show { opacity: 1; }
+  h1 { font-size:2rem; margin-bottom:1rem; color:#d18b3f; }
+  p { font-size:1.2rem; line-height:1.5; color:#6b4c2f; min-height:3em; padding:0 1rem; transition: opacity 0.3s ease; }
+  button { margin-top:1.5rem; padding:0.8rem 1.5rem; border:none; border-radius:999px; font-size:1rem; cursor:pointer; background:#f7c873; color:#6b4c2f; font-weight:bold; box-shadow:0 5px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; }
+  button:hover { background:#ffd68a; transform: translateY(-2px); }
+  .fade { opacity:0; transition: opacity 0.4s ease; }
+  .fade.show { opacity:1; }
 </style>
 </head>
 <body>
@@ -68,37 +27,29 @@
 <script>
 const spruchElem = document.getElementById("spruch");
 const farben = ["#FFF8E7","#FFE3B3","#FFF1C2","#FFED99","#FFF3E0"];
-
-// Hugging Face Modell (kostenlos nutzbar)
-const HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/distilgpt2";
+const WORKER_URL = "https://glckskeks.marina-finster.workers.dev"; // Worker URL einfügen
 
 async function neuerSpruch() {
   spruchElem.classList.remove("show");
   spruchElem.textContent = "Lade deinen Glückskeks...";
 
   try {
-    const response = await fetch(HUGGINGFACE_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "" // optional: Token, sonst Demo-Limit
-      },
-      body: JSON.stringify({
-        inputs: "Erzeuge einen kurzen, poetischen Glückskeks-Spruch auf Deutsch, maximal 15 Wörter, nur der Spruch:"
-      })
-    });
-
+    const response = await fetch(WORKER_URL, { cache:"no-store" });
     const data = await response.json();
 
-    let spruch = "Heute wartet eine kleine Überraschung auf dich.";
+    spruchElem.textContent = data.spruch;
+    document.body.style.background = data.bgColor;
+    spruchElem.classList.add("show");
 
-    if (Array.isArray(data) && data[0]?.generated_text) {
-      // Nur den ersten Satz nach dem Prompt extrahieren
-      spruch = data[0].generated_text
-        .replace(/^Erzeuge einen kurzen, poetischen Glückskeks-Spruch auf Deutsch, maximal 15 Wörter, nur der Spruch: */i, "")
-        .split(/[\n\.]/)[0] // nur erste Zeile / Satz
-        .trim();
-    }
+  } catch (error) {
+    spruchElem.textContent = "Ups! Fehler beim Laden.";
+    console.error(error);
+  }
+}
 
-    spruchElem.textContent = spruch;
-    document.b
+// Direkt laden
+neuerSpruch();
+</script>
+
+</body>
+</html>
