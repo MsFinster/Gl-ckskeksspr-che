@@ -69,9 +69,8 @@
 const spruchElem = document.getElementById("spruch");
 const farben = ["#FFF8E7","#FFE3B3","#FFF1C2","#FFED99","#FFF3E0"];
 
-// Hugging Face Modell: GPT-Neo / text-generation
-const HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/gpt2"; 
-// Du kannst gpt2, distilgpt2 oder andere kostenlose Modelle nutzen
+// Hugging Face Modell (kostenlos nutzbar)
+const HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/distilgpt2";
 
 async function neuerSpruch() {
   spruchElem.classList.remove("show");
@@ -82,10 +81,11 @@ async function neuerSpruch() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // public token kostenlos auf HuggingFace erstellen oder leer lassen für limitierte Demo
-        "Authorization": "Bearer " 
+        "Authorization": "" // optional: Token, sonst Demo-Limit
       },
-      body: JSON.stringify({ inputs: "Erzeuge einen kurzen, poetischen Glückskeks-Spruch auf Deutsch:" })
+      body: JSON.stringify({
+        inputs: "Erzeuge einen kurzen, poetischen Glückskeks-Spruch auf Deutsch, maximal 15 Wörter, nur der Spruch:"
+      })
     });
 
     const data = await response.json();
@@ -93,15 +93,12 @@ async function neuerSpruch() {
     let spruch = "Heute wartet eine kleine Überraschung auf dich.";
 
     if (Array.isArray(data) && data[0]?.generated_text) {
+      // Nur den ersten Satz nach dem Prompt extrahieren
       spruch = data[0].generated_text
-        .replace(/^Erzeuge einen kurzen, poetischen Glückskeks-Spruch auf Deutsch: */i, "")
+        .replace(/^Erzeuge einen kurzen, poetischen Glückskeks-Spruch auf Deutsch, maximal 15 Wörter, nur der Spruch: */i, "")
+        .split(/[\n\.]/)[0] // nur erste Zeile / Satz
         .trim();
     }
 
     spruchElem.textContent = spruch;
-    document.body.style.background = farben[Math.floor(Math.random() * farben.length)];
-    spruchElem.classList.add("show");
-
-  } catch (error) {
-    spruchElem.textContent = "Ups! Fehler beim Laden.";
-    console.e
+    document.b
