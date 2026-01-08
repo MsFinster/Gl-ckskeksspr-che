@@ -5,15 +5,55 @@
 <title>🍪 KI-Glückskeks</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body { font-family: 'Segoe UI', sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; text-align:center; transition: background 0.5s ease; }
-  .card { background:#fff7e6; padding:2.5rem; border-radius:50%; width:320px; height:320px; display:flex; flex-direction:column; justify-content:center; align-items:center; box-shadow:0 15px 35px rgba(0,0,0,0.15); text-align:center; transition: transform 0.3s ease; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    transition: background 0.5s ease;
+  }
+  .card {
+    background: #fff7e6;
+    padding: 2.5rem;
+    border-radius: 50%;
+    width: 320px;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+  }
   .card:hover { transform: scale(1.05); }
-  h1 { font-size:2rem; margin-bottom:1rem; color:#d18b3f; }
-  p { font-size:1.2rem; line-height:1.5; color:#6b4c2f; min-height:3em; padding:0 1rem; transition: opacity 0.3s ease; }
-  button { margin-top:1.5rem; padding:0.8rem 1.5rem; border:none; border-radius:999px; font-size:1rem; cursor:pointer; background:#f7c873; color:#6b4c2f; font-weight:bold; box-shadow:0 5px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; }
-  button:hover { background:#ffd68a; transform: translateY(-2px); }
-  .fade { opacity:0; transition: opacity 0.4s ease; }
-  .fade.show { opacity:1; }
+  h1 { font-size: 2rem; margin-bottom: 1rem; color: #d18b3f; }
+  p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: #6b4c2f;
+    min-height: 3em;
+    padding: 0 1rem;
+    transition: opacity 0.3s ease;
+  }
+  button {
+    margin-top: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #f7c873;
+    color: #6b4c2f;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+  button:hover { background: #ffd68a; transform: translateY(-2px); }
+  .fade { opacity: 0; transition: opacity 0.4s ease; }
+  .fade.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -26,19 +66,18 @@
 
 <script>
 const spruchElem = document.getElementById("spruch");
-const farben = ["#FFF8E7","#FFE3B3","#FFF1C2","#FFED99","#FFF3E0"];
-const WORKER_URL = "glckskeks.marina-finster.workers.dev"; // Worker URL einfügen
+const WORKER_URL = "https://glckskeks.marina-finster.workers.dev/"; // <--- Worker URL einfügen
 
 async function neuerSpruch() {
   spruchElem.classList.remove("show");
   spruchElem.textContent = "Lade deinen Glückskeks...";
 
   try {
-    const response = await fetch(WORKER_URL, { cache:"no-store" });
+    const response = await fetch(WORKER_URL, { cache: "no-store" });
     const data = await response.json();
 
-    spruchElem.textContent = data.spruch;
-    document.body.style.background = data.bgColor;
+    spruchElem.textContent = data.spruch || "Heute wartet eine kleine Überraschung auf dich.";
+    document.body.style.background = data.bgColor || "#FFF8E7";
     spruchElem.classList.add("show");
 
   } catch (error) {
@@ -47,10 +86,9 @@ async function neuerSpruch() {
   }
 }
 
-// Direkt laden
+// Beim Laden direkt einen Spruch anzeigen
 neuerSpruch();
 </script>
 
 </body>
 </html>
-
