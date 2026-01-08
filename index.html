@@ -5,18 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Glückskeks 🍪</title>
   <style>
-    /* Hintergrund */
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #fff8e7, #ffe3b3);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      transition: background 0.5s ease;
     }
 
-    /* Keks-Karte */
     .keks {
       background: #fffdf6;
       width: 300px;
@@ -62,7 +60,6 @@
       background: #ffdb99;
     }
 
-    /* kleine „Keks-Animation“ beim Laden */
     .loading {
       animation: pulse 1s infinite;
       color: #d9a066;
@@ -88,20 +85,26 @@
     const spruchElem = document.getElementById("spruch");
     spruchElem.classList.add("loading");
     spruchElem.textContent = "Lade deinen Glückskeks...";
-    
+
     try {
-      const response = await fetch("https://glckskeks.marina-finster.workers.dev");
+      const response = await fetch("https://glckskeks.marina-finster.workers.dev", { cache: "no-store" });
       const data = await response.json();
+
+      // Text aktualisieren
       spruchElem.textContent = data.spruch;
+
+      // Hintergrundfarbe setzen
+      document.body.style.background = data.bgColor;
+
     } catch (error) {
-      spruchElem.textContent = "Ups! Es ist ein Fehler aufgetreten.";
+      spruchElem.textContent = "Ups! Fehler beim Laden.";
       console.error(error);
     } finally {
       spruchElem.classList.remove("loading");
     }
   }
 
-  // direkt beim Laden einen Spruch anzeigen
+  // Beim Laden direkt einen Spruch anzeigen
   neuerSpruch();
 </script>
 
